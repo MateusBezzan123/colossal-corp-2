@@ -37,4 +37,10 @@ export class HolidaysService {
       throw new NotFoundException(`Holiday not found for IBGE code ${ibgeCode} on date ${date}`);
     }
   }
+
+  async createHoliday(ibgeCode: string, date: string, name: string): Promise<Holiday> {
+    const dateObj = new Date(date);
+    const holiday = this.holidaysRepository.create({ ibgeCode, date: dateObj, name });
+    return this.holidaysRepository.save(holiday);
+  }
 }

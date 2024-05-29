@@ -1,4 +1,4 @@
-import { Controller, Get, Put, Delete, Param, Body, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Controller, Get, Put, Delete, Param, Body, NotFoundException, ForbiddenException, Post } from '@nestjs/common';
 import { HolidaysService } from './holidays.service';
 import { DateUtilsService } from './date-utils.service';
 
@@ -54,5 +54,15 @@ export class HolidaysController {
       throw new ForbiddenException(`Cannot delete national or state holidays at the municipal level`);
     }
     await this.holidaysService.remove(ibgeCode, date);
+  }
+
+  @Post()
+  async createHoliday(
+    @Body('ibgeCode') ibgeCode: string,
+    @Body('date') date: string,
+    @Body('name') name: string,
+  ): Promise<{ name: string }> {
+    const holiday = await this.holidaysService.createHoliday(ibgeCode, date, name);
+    return { name: holiday.name };
   }
 }
